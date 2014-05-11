@@ -68,7 +68,9 @@ namespace Toolbelt.Net.Smtp.Internal
         {
             try
             {
-                return new SmtpClientInputLine(this.Reader.ReadLine());
+                var input = this.Reader.ReadLine();
+                if (input == null) throw new IOException();
+                return new SmtpClientInputLine(input);
             }
             catch (IOException)
             {

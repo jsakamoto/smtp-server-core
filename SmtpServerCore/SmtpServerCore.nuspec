@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>$version$-beta1</version>
+    <version>$version$-beta</version>
     <title>$title$</title>
     <authors>J.Sakamoto</authors>
     <owners>J.Sakamoto</owners>
@@ -19,8 +19,6 @@
     </description>
     <releaseNotes>
       <![CDATA[
-      v.1.1
-      - Support base class members access.
       ]]>
     </releaseNotes>
     <tags>smtp,mail</tags>
