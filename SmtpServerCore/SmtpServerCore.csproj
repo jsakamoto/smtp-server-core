@@ -37,8 +37,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="Toolbelt.Net.Smtp.SmtpMessage">
-      <HintPath>..\packages\Toolbelt.Net.Smtp.SmtpMessage.1.0.0.0-beta1\lib\net40\Toolbelt.Net.Smtp.SmtpMessage.dll</HintPath>
+    <Reference Include="Toolbelt.Net.Smtp.SmtpMessage, Version=1.0.0.7, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Toolbelt.Net.Smtp.SmtpMessage.1.0.0.7-beta1\lib\net40\Toolbelt.Net.Smtp.SmtpMessage.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
