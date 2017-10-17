@@ -4,20 +4,23 @@ using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SmtpServerCore.Test.Internal;
+using Xunit;
 
 namespace Toolbelt.Net.Smtp.Test
 {
-    [TestClass]
-    public class SmtpServerCoreTest
+    public class SmtpServerCoreTest : IDisposable
     {
         private SmtpServerCore _Server;
 
         private List<SmtpMessage> _Messages;
 
-        [TestInitialize]
-        public void OnTestInitialize()
+        public SmtpServerCoreTest()
         {
+            Encoding.RegisterProvider(new BodyNamePatchedCodePagesEncodingProvider(
+                CodePagesEncodingProvider.Instance,
+                new[] { new EncodingBodyNamePatch(50220, "iso-2022-jp") }));
+
             _Server = new SmtpServerCore();
             _Messages = new List<SmtpMessage>();
             _Server.ReceiveMessage += _Server_ReceiveMessage;
@@ -29,19 +32,18 @@ namespace Toolbelt.Net.Smtp.Test
             _Messages.Add(e.Message);
         }
 
-        [TestCleanup]
-        public void OnTestCleanup()
+        public void Dispose()
         {
             _Messages.Clear();
             _Server.Dispose();
         }
 
-        [TestMethod]
+        [Fact(DisplayName = "Send Mail")]
         public void SendMail_Test()
         {
             var attachment1FilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"azure_websites_b32.png");
 
-            using (var smtpClient = new SmtpClient { Timeout = int.MaxValue })
+            using (var smtpClient = new SmtpClient("localhost", 25) { Timeout = int.MaxValue })
             {
 
                 var iso2022jp = Encoding.GetEncoding("iso-2022-jp");

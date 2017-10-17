@@ -1,6 +1,6 @@
 *.suo
 *.user
-/packages/
-/TestResult/
+packages/
 bin/
 obj/
+.vs/

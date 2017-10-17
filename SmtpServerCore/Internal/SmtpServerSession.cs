@@ -66,17 +66,9 @@ namespace Toolbelt.Net.Smtp.Internal
 
         public SmtpClientInputLine ReadLine()
         {
-            try
-            {
-                var input = this.Reader.ReadLine();
-                if (input == null) throw new IOException();
-                return new SmtpClientInputLine(input);
-            }
-            catch (IOException)
-            {
-                Thread.CurrentThread.Abort();
-                throw;
-            }
+            var input = this.Reader.ReadLine();
+            if (input == null) return null;
+            return new SmtpClientInputLine(input);
         }
 
         public void ClearIdentity()
@@ -115,6 +107,7 @@ namespace Toolbelt.Net.Smtp.Internal
             do
             {
                 var input = this.ReadLine();
+                if (input == null) break;
                 DispatchHandler(input);
             } while (SessionEnded == false);
 
@@ -131,7 +124,7 @@ namespace Toolbelt.Net.Smtp.Internal
             handler(this, input);
         }
 
-        protected static readonly Dictionary<string, Action<SmtpServerSession, SmtpClientInputLine>> _InitialHandlers = new Dictionary<string, Action<SmtpServerSession, SmtpClientInputLine>> { 
+        protected static readonly Dictionary<string, Action<SmtpServerSession, SmtpClientInputLine>> _InitialHandlers = new Dictionary<string, Action<SmtpServerSession, SmtpClientInputLine>> {
                 {"HELO", HandleOK},
                 {"EHLO", OnEHLO},
                 {"AUTH", OnAuth},
@@ -142,16 +135,16 @@ namespace Toolbelt.Net.Smtp.Internal
                 {"*", UnknownCommand},
             };
 
-        protected static readonly Dictionary<string, Action<SmtpServerSession, SmtpClientInputLine>> _AuthPlainHandlers = new Dictionary<string, Action<SmtpServerSession, SmtpClientInputLine>> { 
+        protected static readonly Dictionary<string, Action<SmtpServerSession, SmtpClientInputLine>> _AuthPlainHandlers = new Dictionary<string, Action<SmtpServerSession, SmtpClientInputLine>> {
                 {"*", AuthPlain} };
 
-        protected static readonly Dictionary<string, Action<SmtpServerSession, SmtpClientInputLine>> _AuthCRAMMD5Handlers = new Dictionary<string, Action<SmtpServerSession, SmtpClientInputLine>> { 
+        protected static readonly Dictionary<string, Action<SmtpServerSession, SmtpClientInputLine>> _AuthCRAMMD5Handlers = new Dictionary<string, Action<SmtpServerSession, SmtpClientInputLine>> {
                 {"*", AuthCRAMMD5} };
 
-        protected static readonly Dictionary<string, Action<SmtpServerSession, SmtpClientInputLine>> _HeaderHandlers = new Dictionary<string, Action<SmtpServerSession, SmtpClientInputLine>> { 
+        protected static readonly Dictionary<string, Action<SmtpServerSession, SmtpClientInputLine>> _HeaderHandlers = new Dictionary<string, Action<SmtpServerSession, SmtpClientInputLine>> {
                 {"*", HandleHeader} };
 
-        protected static readonly Dictionary<string, Action<SmtpServerSession, SmtpClientInputLine>> _BodyHandlers = new Dictionary<string, Action<SmtpServerSession, SmtpClientInputLine>> { 
+        protected static readonly Dictionary<string, Action<SmtpServerSession, SmtpClientInputLine>> _BodyHandlers = new Dictionary<string, Action<SmtpServerSession, SmtpClientInputLine>> {
                 {"*", HandleBody} };
 
         protected static void HandleOK(SmtpServerSession context, SmtpClientInputLine input)
